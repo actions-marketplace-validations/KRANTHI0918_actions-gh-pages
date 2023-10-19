@@ -59,13 +59,9 @@ Watch https://github.com/peaceiris/actions-gh-pages/issues/87
     await exec.exec('sc', ['config', 'ssh-agent', 'start=auto']);
     await exec.exec('sc', ['start', 'ssh-agent']);
   }
-  // Check if SSH_AUTH_SOCK is already set
-  if (!process.env.SSH_AUTH_SOCK) {
-    // SSH_AUTH_SOCK is not set, start a new SSH agent
-    await cpexec('ssh-agent', ['-a', '/tmp/ssh-auth.sock']);
-    core.exportVariable('SSH_AUTH_SOCK', '/tmp/ssh-auth.sock');
-    await exec.exec('ssh-add', [idRSA]);
-  }
+  await cpexec('ssh-agent', ['-a', '/tmp/ssh-auth-1.sock']);
+  core.exportVariable('SSH_AUTH_SOCK', '/tmp/ssh-auth-1.sock');
+  await exec.exec('ssh-add', [idRSA]);
 
   return `git@${getServerUrl().host}:${publishRepo}.git`;
 }
